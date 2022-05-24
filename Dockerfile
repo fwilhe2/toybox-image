@@ -11,4 +11,6 @@ RUN python build-rootfs.py
 
 FROM scratch
 
-COPY --from=BUILDER /usr/src/app/rootfs /
+COPY --from=BUILDER /usr/src/app/rootfs/ /
+
+ENTRYPOINT [ "/bin/toybox", "sh" ]
