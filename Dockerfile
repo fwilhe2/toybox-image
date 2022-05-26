@@ -9,7 +9,7 @@ COPY . .
 
 RUN python build-rootfs.py
 
-FROM scratch
+FROM gcr.io/distroless/static
 
 COPY --from=BUILDER /usr/src/app/rootfs/ /
 
