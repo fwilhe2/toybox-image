@@ -2,6 +2,7 @@ name: Build and push image
 
 on:
   push:
+  workflow_dispatch:
 
 jobs:
   build-push:
