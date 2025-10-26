@@ -6,4 +6,5 @@ cd toybox
 export LDFLAGS=--static
 make defconfig
 echo CONFIG_SH=y >> .config
+echo CONFIG_VI=y >> .config
 make toybox
