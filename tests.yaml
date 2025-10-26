@@ -1,0 +1,70 @@
+schemaVersion: "2.0.0"
+
+# Command tests exercise the toybox binary and its multicall behavior.
+commandTests:
+  - name: "Toybox --help shows toybox banner"
+    command: "/bin/toybox"
+    args:
+      - --help
+    expectedOutput:
+      # case-insensitive match for "toybox"
+      - "(?i)toybox"
+    exitCode: 0
+
+  - name: "Invoke ls via toybox multicall (toybox ls /)"
+    command: "/bin/toybox"
+    args:
+      - ls
+      - /
+    expectedOutput:
+      # root listing should contain bin on most images
+      - "\\bbin\\b"
+    exitCode: 0
+
+  - name: "Invoke ls via applet symlink (/bin/ls /)"
+    command: "/bin/ls"
+    args:
+      - /
+    expectedOutput:
+      - "\\bbin\\b"
+    exitCode: 0
+
+  - name: "Invoke echo applet symlink (/bin/echo)"
+    command: "/bin/echo"
+    args:
+      - hello-from-toybox
+    expectedOutput:
+      - "hello-from-toybox"
+    exitCode: 0
+
+# File existence tests ensure the multicall binary and common applet symlinks exist
+fileExistenceTests:
+  - name: "toybox binary present"
+    path: "/bin/toybox"
+    shouldExist: true
+    isExecutableBy: "any"
+
+  - name: "ls applet present (usually a symlink to toybox)"
+    path: "/bin/ls"
+    shouldExist: true
+    isExecutableBy: "any"
+
+  - name: "echo applet present (usually a symlink to toybox)"
+    path: "/bin/echo"
+    shouldExist: true
+    isExecutableBy: "any"
+
+# File content tests: search the binary for a toybox string (often embedded)
+fileContentTests:
+  - name: "toybox binary contains toybox banner"
+    path: "/bin/toybox"
+    expectedContents:
+      - "(?i)toybox"
+
+metadataTest:
+  entrypoint: ["/bin/toybox", "sh"]
+  cmd: []
+  workdir: "/"
+
+licenseTests:
+  - debian: false

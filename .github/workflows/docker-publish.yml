@@ -24,3 +24,8 @@ jobs:
           password: ${{ secrets.DH_PAT }}
       - name: Build and push
         run: docker buildx build --platform=linux/amd64,linux/arm64 --push --tag=fwilhe2/toybox .
+
+      - name: Install container-structure-test
+        run: curl -LO https://github.com/GoogleContainerTools/container-structure-test/releases/latest/download/container-structure-test-linux-amd64 && chmod +x container-structure-test-linux-amd64 && sudo mv container-structure-test-linux-amd64 /usr/local/bin/container-structure-test
+      - name: Test Image
+        run: container-structure-test test --image fwilhe2/toybox --config tests.yaml
